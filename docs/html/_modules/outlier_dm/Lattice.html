@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>outlier_dm.Lattice &#8212; Outlier detection 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Outlier detection 0.1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for outlier_dm.Lattice</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">@author: cengels</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">.Condition</span> <span class="k">import</span> <span class="n">NominalCondition</span><span class="p">,</span> <span class="n">NumericalCondition</span>
+<span class="kn">from</span> <span class="nn">.OutlierDetection</span> <span class="k">import</span> <span class="n">detect_outliers</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">ceil</span><span class="p">,</span> <span class="n">Infinity</span><span class="p">,</span> <span class="n">log10</span><span class="p">,</span> <span class="n">average</span>
+<span class="kn">from</span> <span class="nn">pandas.tools.tile</span> <span class="k">import</span> <span class="n">cut</span>
+
+
+<div class="viewcode-block" id="Lattice"><a class="viewcode-back" href="../../outlier_dm.html#outlier_dm.Lattice.Lattice">[docs]</a><span class="k">class</span> <span class="nc">Lattice</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Lattice class for subpopulation implementation.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;Graph&quot; of vertices, at each vertex ItemSet + corresponding set of conditions</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Vertex</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="Lattice.num_vertices"><a class="viewcode-back" href="../../outlier_dm.html#outlier_dm.Lattice.Lattice.num_vertices">[docs]</a>    <span class="k">def</span> <span class="nf">num_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>    
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">treesize</span><span class="p">()</span></div>
+        
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Pruning rules:</span>
+<span class="sd">    A child vertex is pruned, if</span>
+<span class="sd">        - the number of items is smaller than min_population_size</span>
+<span class="sd">        - the number of items is greater than number of parent items * reduction_factor (0 &lt; reduction_factor &lt;= 1.0)</span>
+<span class="sd">        TODO: if there is no change in the histogram (i.e. there is no information gain)</span>
+<span class="sd">    &#39;&#39;&#39;</span>    
+<div class="viewcode-block" id="Lattice.generate_subpopulations"><a class="viewcode-back" href="../../outlier_dm.html#outlier_dm.Lattice.Lattice.generate_subpopulations">[docs]</a>    <span class="k">def</span> <span class="nf">generate_subpopulations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_iteration</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_population_size</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">reduction_factor</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">branch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">max_iteration</span><span class="p">,</span> <span class="n">min_population_size</span><span class="p">)</span>            </div>
+        
+<div class="viewcode-block" id="Lattice.detect_outliers"><a class="viewcode-back" href="../../outlier_dm.html#outlier_dm.Lattice.Lattice.detect_outliers">[docs]</a>    <span class="k">def</span> <span class="nf">detect_outliers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="n">it</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">get_children</span><span class="p">():</span>
+            <span class="n">detect_outliers</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">it</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+            <span class="n">it</span> <span class="o">+=</span> <span class="mi">1</span></div>
+        
+<div class="viewcode-block" id="Lattice.conditions"><a class="viewcode-back" href="../../outlier_dm.html#outlier_dm.Lattice.Lattice.conditions">[docs]</a>    <span class="k">def</span> <span class="nf">conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">conditions</span> <span class="o">=</span> <span class="p">[{}]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">()</span> 
+        <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">get_children</span><span class="p">():</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">vertex</span><span class="o">.</span><span class="n">scores</span><span class="p">):</span>  
+                <span class="n">conditions</span><span class="p">[</span><span class="n">vertex</span><span class="o">.</span><span class="n">score_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertex</span><span class="o">.</span><span class="n">conditions</span>
+        <span class="k">return</span> <span class="n">conditions</span>    </div>
+        
+    <span class="k">def</span> <span class="nf">__str__</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;root:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">__str__</span><span class="p">()</span>
+            
+    <span class="k">def</span> <span class="nf">__repr__</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;root:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">__repr__</span><span class="p">()</span> </div>
+
+<span class="c1">#TODO: Implement iterator for lattice and remove get_children().</span>
+
+        
+<div class="viewcode-block" id="Vertex"><a class="viewcode-back" href="../../outlier_dm.html#outlier_dm.Lattice.Vertex">[docs]</a><span class="k">class</span> <span class="nc">Vertex</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Vertex in the lattice.</span>
+<span class="sd">    </span>
+<span class="sd">    items: list of items (reference)</span>
+<span class="sd">    conditions : list of conditions (copy)</span>
+<span class="sd">    children: list of vertices</span>
+<span class="sd">    scores: list of scores</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">conditions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">conditions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>    
+            <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">conditions</span><span class="p">)</span>
+            
+<div class="viewcode-block" id="Vertex.num_items"><a class="viewcode-back" href="../../outlier_dm.html#outlier_dm.Lattice.Vertex.num_items">[docs]</a>    <span class="k">def</span> <span class="nf">num_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>   </div>
+    
+<div class="viewcode-block" id="Vertex.max_feature"><a class="viewcode-back" href="../../outlier_dm.html#outlier_dm.Lattice.Vertex.max_feature">[docs]</a>    <span class="k">def</span> <span class="nf">max_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">condition</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">feature_id</span> <span class="k">for</span> <span class="n">condition</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span><span class="p">)</span>   </div>
+    
+<div class="viewcode-block" id="Vertex.target_values"><a class="viewcode-back" href="../../outlier_dm.html#outlier_dm.Lattice.Vertex.target_values">[docs]</a>    <span class="k">def</span> <span class="nf">target_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">target</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">]</span>    </div>
+    
+<div class="viewcode-block" id="Vertex.treesize"><a class="viewcode-back" href="../../outlier_dm.html#outlier_dm.Lattice.Vertex.treesize">[docs]</a>    <span class="k">def</span> <span class="nf">treesize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">child</span><span class="o">.</span><span class="n">treesize</span><span class="p">()</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span></div>
+  
+<div class="viewcode-block" id="Vertex.get_children"><a class="viewcode-back" href="../../outlier_dm.html#outlier_dm.Lattice.Vertex.get_children">[docs]</a>    <span class="k">def</span> <span class="nf">get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">get_children</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">res</span>    </div>
+  
+<div class="viewcode-block" id="Vertex.branch"><a class="viewcode-back" href="../../outlier_dm.html#outlier_dm.Lattice.Vertex.branch">[docs]</a>    <span class="k">def</span> <span class="nf">branch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">branching_features</span><span class="p">,</span> <span class="n">iteration</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">max_iteration</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_population_size</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">reduction_factor</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">iteration</span> <span class="o">==</span> <span class="n">max_iteration</span><span class="p">:</span>
+            <span class="k">return</span>
+        
+        <span class="sd">&#39;&#39;&#39;Generate possible branching conditions based on features/feature values.&#39;&#39;&#39;</span>
+        <span class="n">conditions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>       
+        
+        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">branching_features</span><span class="p">:</span>     
+            <span class="k">if</span> <span class="n">feature</span><span class="o">.</span><span class="n">is_nominal</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">([</span><span class="n">item</span><span class="o">.</span><span class="n">feature_value</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">]):</span>
+                    <span class="n">conditions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">NominalCondition</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">feature</span><span class="o">.</span><span class="n">is_numerical</span><span class="p">():</span>               
+                <span class="sd">&#39;&#39;&#39;Discretize values and bin ranges as branching condition.&#39;&#39;&#39;</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">feature_value</span><span class="p">(</span><span class="n">feature</span><span class="p">))</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span>
+                          <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">feature_value</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;n.a.&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  
+                    <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">-</span><span class="nb">min</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>
+                        <span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">average</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">values</span><span class="p">)]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">num_bins</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">/</span><span class="n">min_population_size</span><span class="p">),</span> <span class="mi">10</span><span class="p">)),</span> <span class="mi">2</span><span class="p">)</span>
+                        <span class="n">bins</span> <span class="o">=</span> <span class="n">cut</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">num_bins</span><span class="p">,</span> <span class="n">retbins</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">digits</span><span class="p">(</span><span class="n">b</span><span class="p">))</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bins</span><span class="p">]</span>
+                    <span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">Infinity</span>
+                    <span class="n">bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Infinity</span>
+                    <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>                         
+                        <span class="n">conditions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">NumericalCondition</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">bins</span><span class="p">[</span><span class="n">it</span><span class="p">],</span> <span class="n">bins</span><span class="p">[</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span>      
+
+        <span class="sd">&#39;&#39;&#39;Generate children and branch - or prune.&#39;&#39;&#39;</span>        
+        <span class="k">for</span> <span class="n">additional_condition</span> <span class="ow">in</span> <span class="n">conditions</span><span class="p">:</span>  
+            <span class="n">child_items</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">satisfy</span><span class="p">(</span><span class="n">additional_condition</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span> <span class="o">*</span> <span class="n">reduction_factor</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">child_items</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">min_population_size</span><span class="p">:</span>
+                <span class="n">child_condition</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conditions</span><span class="p">)</span>
+                <span class="n">child_condition</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">additional_condition</span><span class="p">)</span>  
+                <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Vertex</span><span class="p">(</span><span class="n">child_items</span><span class="p">,</span> <span class="n">child_condition</span><span class="p">))</span>
+                <span class="n">child_features</span> <span class="o">=</span> <span class="p">[</span><span class="n">feature</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">branching_features</span> <span class="k">if</span> <span class="n">feature</span> <span class="o">&gt;</span> <span class="n">additional_condition</span><span class="o">.</span><span class="n">feature</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">branch</span><span class="p">(</span><span class="n">child_features</span><span class="p">,</span> <span class="n">iteration</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_iteration</span><span class="p">,</span> <span class="n">min_population_size</span><span class="p">)</span>
+
+                <span class="n">vset</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">child_condition</span><span class="p">)):</span>
+                    <span class="n">vset</span> <span class="o">|=</span> <span class="p">{</span><span class="n">child_condition</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">}</span>
+
+                <span class="n">rset</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;&quot;http://data.openbudgets.eu/resource/codelist/kae-ota-administration-2014/30&quot;&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;&quot;http://data.openbudgets.eu/resource/codelist/budget-phase/approved&quot;&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;&quot;http://data.openbudgets.eu/resource/codelist/kae-ota-exodwn-2014/7412&quot;&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;&quot;http://reference.data.gov.uk/id/year/2012&quot;&#39;</span><span class="p">}</span>
+                <span class="k">if</span> <span class="n">vset</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">rset</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">target</span> <span class="o">==</span> <span class="mf">640490.93</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*self.items*&quot;</span><span class="p">,</span> <span class="n">vset</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>    
+        <span class="k">return</span> <span class="s2">&quot;Conditions:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">Items:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">Children:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span><span class="o">.</span><span class="n">__str__</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">__str__</span><span class="p">(),</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">__str__</span><span class="p">()</span>
+        <span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">__repr__</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Conditions:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">Items:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">Children:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span><span class="o">.</span><span class="n">__repr__</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">__repr__</span><span class="p">(),</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">__repr__</span><span class="p">()</span>
+        <span class="p">)</span>       </div>
+        
+        
+<div class="viewcode-block" id="digits"><a class="viewcode-back" href="../../outlier_dm.html#outlier_dm.Lattice.digits">[docs]</a><span class="k">def</span> <span class="nf">digits</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">number</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">corr</span> <span class="o">=</span> <span class="mf">0.3</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">corr</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">ceil</span><span class="p">(</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">number</span><span class="o">/</span><span class="mi">10</span><span class="p">))</span><span class="o">-</span><span class="n">corr</span><span class="p">))</span>       </div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Tiansi, etc..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

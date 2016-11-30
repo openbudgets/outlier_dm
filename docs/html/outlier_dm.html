@@ -1,0 +1,572 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>outlier_dm package &#8212; Outlier detection 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="Outlier detection 0.1.0 documentation" href="index.html" />
+    <link rel="prev" title="Welcome to outlier_dm’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="outlier-dm-package">
+<h1>outlier_dm package<a class="headerlink" href="#outlier-dm-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-outlier_dm.Condition">
+<span id="outlier-dm-condition-module"></span><h2>outlier_dm.Condition module<a class="headerlink" href="#module-outlier_dm.Condition" title="Permalink to this headline">¶</a></h2>
+<p>&#64;author: cengels</p>
+<dl class="class">
+<dt id="outlier_dm.Condition.Condition">
+<em class="property">class </em><code class="descclassname">outlier_dm.Condition.</code><code class="descname">Condition</code><span class="sig-paren">(</span><em>feature</em>, <em>value1</em>, <em>value2=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Condition.html#Condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Condition.Condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Abstract class for modeling the branching conditions in a lattice.
+A condition is either nominal or numerical.</p>
+<dl class="method">
+<dt id="outlier_dm.Condition.Condition.check">
+<code class="descname">check</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Condition.html#Condition.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Condition.Condition.check" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.Condition.Condition.check_item">
+<code class="descname">check_item</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Condition.html#Condition.check_item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Condition.Condition.check_item" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="outlier_dm.Condition.NominalCondition">
+<em class="property">class </em><code class="descclassname">outlier_dm.Condition.</code><code class="descname">NominalCondition</code><span class="sig-paren">(</span><em>feature</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Condition.html#NominalCondition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Condition.NominalCondition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#outlier_dm.Condition.Condition" title="outlier_dm.Condition.Condition"><code class="xref py py-class docutils literal"><span class="pre">outlier_dm.Condition.Condition</span></code></a></p>
+<p>Nominal condition for branching in a lattice.
+Checks &#8220;given value == self.value&#8221;.</p>
+<dl class="method">
+<dt id="outlier_dm.Condition.NominalCondition.check">
+<code class="descname">check</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Condition.html#NominalCondition.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Condition.NominalCondition.check" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="outlier_dm.Condition.NominalCondition.condition_type">
+<code class="descname">condition_type</code><em class="property"> = 'Nominal'</em><a class="headerlink" href="#outlier_dm.Condition.NominalCondition.condition_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="outlier_dm.Condition.NumericalCondition">
+<em class="property">class </em><code class="descclassname">outlier_dm.Condition.</code><code class="descname">NumericalCondition</code><span class="sig-paren">(</span><em>feature</em>, <em>value1</em>, <em>value2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Condition.html#NumericalCondition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Condition.NumericalCondition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#outlier_dm.Condition.Condition" title="outlier_dm.Condition.Condition"><code class="xref py py-class docutils literal"><span class="pre">outlier_dm.Condition.Condition</span></code></a></p>
+<p>Numerical condition for branching in a lattice.
+Checks &#8220;given self.value1 &lt; value &lt;= self.value2&#8221;.</p>
+<dl class="method">
+<dt id="outlier_dm.Condition.NumericalCondition.check">
+<code class="descname">check</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Condition.html#NumericalCondition.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Condition.NumericalCondition.check" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="outlier_dm.Condition.NumericalCondition.condition_type">
+<code class="descname">condition_type</code><em class="property"> = 'Numerical'</em><a class="headerlink" href="#outlier_dm.Condition.NumericalCondition.condition_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-outlier_dm.InputOutput">
+<span id="outlier-dm-inputoutput-module"></span><h2>outlier_dm.InputOutput module<a class="headerlink" href="#module-outlier_dm.InputOutput" title="Permalink to this headline">¶</a></h2>
+<p>&#64;author: cengels, tdong</p>
+<dl class="class">
+<dt id="outlier_dm.InputOutput.Structure">
+<em class="property">class </em><code class="descclassname">outlier_dm.InputOutput.</code><code class="descname">Structure</code><a class="reference internal" href="_modules/outlier_dm/InputOutput.html#Structure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.InputOutput.Structure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="outlier_dm.InputOutput.Structure.fill">
+<code class="descname">fill</code><span class="sig-paren">(</span><em>header1</em>, <em>header2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/InputOutput.html#Structure.fill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.InputOutput.Structure.fill" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="outlier_dm.InputOutput.create_item">
+<code class="descclassname">outlier_dm.InputOutput.</code><code class="descname">create_item</code><span class="sig-paren">(</span><em>row</em>, <em>rowcount</em>, <em>structure</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/InputOutput.html#create_item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.InputOutput.create_item" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="outlier_dm.InputOutput.getScore">
+<code class="descclassname">outlier_dm.InputOutput.</code><code class="descname">getScore</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/InputOutput.html#getScore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.InputOutput.getScore" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="outlier_dm.InputOutput.header">
+<code class="descclassname">outlier_dm.InputOutput.</code><code class="descname">header</code><span class="sig-paren">(</span><em>features</em>, <em>conditions=None</em>, <em>write_condition=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/InputOutput.html#header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.InputOutput.header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Features</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="outlier_dm.InputOutput.output_table">
+<code class="descclassname">outlier_dm.InputOutput.</code><code class="descname">output_table</code><span class="sig-paren">(</span><em>lattice</em>, <em>threshold=3</em>, <em>score_type='all'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/InputOutput.html#output_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.InputOutput.output_table" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="outlier_dm.InputOutput.read_input_csv">
+<code class="descclassname">outlier_dm.InputOutput.</code><code class="descname">read_input_csv</code><span class="sig-paren">(</span><em>filename</em>, <em>delimiter='</em>, <em>'</em>, <em>quotechar='|'</em>, <em>limit=25000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/InputOutput.html#read_input_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.InputOutput.read_input_csv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="outlier_dm.InputOutput.write_csv">
+<code class="descclassname">outlier_dm.InputOutput.</code><code class="descname">write_csv</code><span class="sig-paren">(</span><em>lattice</em>, <em>filename='output.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/InputOutput.html#write_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.InputOutput.write_csv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="outlier_dm.InputOutput.write_item">
+<code class="descclassname">outlier_dm.InputOutput.</code><code class="descname">write_item</code><span class="sig-paren">(</span><em>item</em>, <em>num_scores=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/InputOutput.html#write_item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.InputOutput.write_item" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="outlier_dm.InputOutput.write_outlier">
+<code class="descclassname">outlier_dm.InputOutput.</code><code class="descname">write_outlier</code><span class="sig-paren">(</span><em>lattice</em>, <em>filename='outlier.csv'</em>, <em>threshold=3</em>, <em>score_type='all'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/InputOutput.html#write_outlier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.InputOutput.write_outlier" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="outlier_dm.InputOutput.write_top_outlier">
+<code class="descclassname">outlier_dm.InputOutput.</code><code class="descname">write_top_outlier</code><span class="sig-paren">(</span><em>lattice</em>, <em>filename='top_outlier.csv'</em>, <em>num_outliers=25</em>, <em>server_data_path=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/InputOutput.html#write_top_outlier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.InputOutput.write_top_outlier" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-outlier_dm.Items">
+<span id="outlier-dm-items-module"></span><h2>outlier_dm.Items module<a class="headerlink" href="#module-outlier_dm.Items" title="Permalink to this headline">¶</a></h2>
+<p>&#64;author: cengels</p>
+<dl class="class">
+<dt id="outlier_dm.Items.Feature">
+<em class="property">class </em><code class="descclassname">outlier_dm.Items.</code><code class="descname">Feature</code><span class="sig-paren">(</span><em>feature_id</em>, <em>feature_type</em>, <em>label=None</em>, <em>description=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Items.html#Feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Items.Feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class for modeling features.</p>
+<p>feature: identifier, e.g. feature name
+feature_type: either nominal or numerical</p>
+<dl class="method">
+<dt id="outlier_dm.Items.Feature.is_nominal">
+<code class="descname">is_nominal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Items.html#Feature.is_nominal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Items.Feature.is_nominal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.Items.Feature.is_numerical">
+<code class="descname">is_numerical</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Items.html#Feature.is_numerical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Items.Feature.is_numerical" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="outlier_dm.Items.Item">
+<em class="property">class </em><code class="descclassname">outlier_dm.Items.</code><code class="descname">Item</code><span class="sig-paren">(</span><em>item_id</em>, <em>features=None</em>, <em>target=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Items.html#Item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Items.Item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class for Items in Outlier Detection.
+Each item has an ID, multiple features (nominal/numerical) + 1 target amount.</p>
+<dl class="method">
+<dt id="outlier_dm.Items.Item.add_score">
+<code class="descname">add_score</code><span class="sig-paren">(</span><em>score_id</em>, <em>condition</em>, <em>score</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Items.html#Item.add_score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Items.Item.add_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.Items.Item.feature_value">
+<code class="descname">feature_value</code><span class="sig-paren">(</span><em>feature</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Items.html#Item.feature_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Items.Item.feature_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.Items.Item.satisfy">
+<code class="descname">satisfy</code><span class="sig-paren">(</span><em>condition</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Items.html#Item.satisfy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Items.Item.satisfy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-outlier_dm.LOF">
+<span id="outlier-dm-lof-module"></span><h2>outlier_dm.LOF module<a class="headerlink" href="#module-outlier_dm.LOF" title="Permalink to this headline">¶</a></h2>
+<p>&#64;author: cengels</p>
+<dl class="class">
+<dt id="outlier_dm.LOF.LOF">
+<em class="property">class </em><code class="descclassname">outlier_dm.LOF.</code><code class="descname">LOF</code><span class="sig-paren">(</span><em>k=5</em>, <em>max_size=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/LOF.html#LOF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.LOF.LOF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>1D local outlier factor implementation</p>
+<dl class="method">
+<dt id="outlier_dm.LOF.LOF.fill_neighbors">
+<code class="descname">fill_neighbors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/LOF.html#LOF.fill_neighbors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.LOF.LOF.fill_neighbors" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.LOF.LOF.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/LOF.html#LOF.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.LOF.LOF.initialize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.LOF.LOF.initialize_data">
+<code class="descname">initialize_data</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/LOF.html#LOF.initialize_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.LOF.LOF.initialize_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.LOF.LOF.scores">
+<code class="descname">scores</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/LOF.html#LOF.scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.LOF.LOF.scores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="outlier_dm.LOF.LOF_Item">
+<em class="property">class </em><code class="descclassname">outlier_dm.LOF.</code><code class="descname">LOF_Item</code><span class="sig-paren">(</span><em>value</em>, <em>pred=None</em>, <em>succ=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/LOF.html#LOF_Item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.LOF.LOF_Item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Data structure for 1D local outlier factor implementation.</p>
+<p>value:     1D data point
+pred:      predecessor in ordering
+succ:      successor in ordering
+neighbors: k nearest neighbors
+kdist:     dist to k-nearest neighbor
+get_lrd:       local reachability density</p>
+<dl class="method">
+<dt id="outlier_dm.LOF.LOF_Item.distk">
+<code class="descname">distk</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/LOF.html#LOF_Item.distk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.LOF.LOF_Item.distk" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.LOF.LOF_Item.get_lrd">
+<code class="descname">get_lrd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/LOF.html#LOF_Item.get_lrd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.LOF.LOF_Item.get_lrd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.LOF.LOF_Item.lof">
+<code class="descname">lof</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/LOF.html#LOF_Item.lof"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.LOF.LOF_Item.lof" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="outlier_dm.LOF.d">
+<code class="descclassname">outlier_dm.LOF.</code><code class="descname">d</code><span class="sig-paren">(</span><em>A</em>, <em>B</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/LOF.html#d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.LOF.d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-outlier_dm.Lattice">
+<span id="outlier-dm-lattice-module"></span><h2>outlier_dm.Lattice module<a class="headerlink" href="#module-outlier_dm.Lattice" title="Permalink to this headline">¶</a></h2>
+<p>&#64;author: cengels</p>
+<dl class="class">
+<dt id="outlier_dm.Lattice.Lattice">
+<em class="property">class </em><code class="descclassname">outlier_dm.Lattice.</code><code class="descname">Lattice</code><span class="sig-paren">(</span><em>features</em>, <em>items</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Lattice.html#Lattice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Lattice.Lattice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Lattice class for subpopulation implementation.</p>
+<p>&#8220;Graph&#8221; of vertices, at each vertex ItemSet + corresponding set of conditions</p>
+<dl class="method">
+<dt id="outlier_dm.Lattice.Lattice.conditions">
+<code class="descname">conditions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Lattice.html#Lattice.conditions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Lattice.Lattice.conditions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.Lattice.Lattice.detect_outliers">
+<code class="descname">detect_outliers</code><span class="sig-paren">(</span><em>method</em>, <em>k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Lattice.html#Lattice.detect_outliers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Lattice.Lattice.detect_outliers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.Lattice.Lattice.generate_subpopulations">
+<code class="descname">generate_subpopulations</code><span class="sig-paren">(</span><em>max_iteration=-1</em>, <em>min_population_size=5</em>, <em>reduction_factor=0.9</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Lattice.html#Lattice.generate_subpopulations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Lattice.Lattice.generate_subpopulations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.Lattice.Lattice.num_vertices">
+<code class="descname">num_vertices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Lattice.html#Lattice.num_vertices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Lattice.Lattice.num_vertices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="outlier_dm.Lattice.Vertex">
+<em class="property">class </em><code class="descclassname">outlier_dm.Lattice.</code><code class="descname">Vertex</code><span class="sig-paren">(</span><em>items</em>, <em>conditions=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Lattice.html#Vertex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Lattice.Vertex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Vertex in the lattice.</p>
+<p>items: list of items (reference)
+conditions : list of conditions (copy)
+children: list of vertices
+scores: list of scores</p>
+<dl class="method">
+<dt id="outlier_dm.Lattice.Vertex.branch">
+<code class="descname">branch</code><span class="sig-paren">(</span><em>branching_features</em>, <em>iteration=0</em>, <em>max_iteration=-1</em>, <em>min_population_size=5</em>, <em>reduction_factor=0.9</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Lattice.html#Vertex.branch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Lattice.Vertex.branch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.Lattice.Vertex.get_children">
+<code class="descname">get_children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Lattice.html#Vertex.get_children"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Lattice.Vertex.get_children" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.Lattice.Vertex.max_feature">
+<code class="descname">max_feature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Lattice.html#Vertex.max_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Lattice.Vertex.max_feature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.Lattice.Vertex.num_items">
+<code class="descname">num_items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Lattice.html#Vertex.num_items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Lattice.Vertex.num_items" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.Lattice.Vertex.target_values">
+<code class="descname">target_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Lattice.html#Vertex.target_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Lattice.Vertex.target_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.Lattice.Vertex.treesize">
+<code class="descname">treesize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Lattice.html#Vertex.treesize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Lattice.Vertex.treesize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="outlier_dm.Lattice.digits">
+<code class="descclassname">outlier_dm.Lattice.</code><code class="descname">digits</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/Lattice.html#digits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.Lattice.digits" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-outlier_dm.OutlierDetection">
+<span id="outlier-dm-outlierdetection-module"></span><h2>outlier_dm.OutlierDetection module<a class="headerlink" href="#module-outlier_dm.OutlierDetection" title="Permalink to this headline">¶</a></h2>
+<p>&#64;author: cengels</p>
+<dl class="class">
+<dt id="outlier_dm.OutlierDetection.OutlierMethod">
+<em class="property">class </em><code class="descclassname">outlier_dm.OutlierDetection.</code><code class="descname">OutlierMethod</code><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#OutlierMethod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.OutlierMethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Abstract class for outlier detection methods.</p>
+<dl class="method">
+<dt id="outlier_dm.OutlierDetection.OutlierMethod.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#OutlierMethod.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.OutlierMethod.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.OutlierDetection.OutlierMethod.get_scores">
+<code class="descname">get_scores</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#OutlierMethod.get_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.OutlierMethod.get_scores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="outlier_dm.OutlierDetection.Outlier_Average">
+<em class="property">class </em><code class="descclassname">outlier_dm.OutlierDetection.</code><code class="descname">Outlier_Average</code><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_Average"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_Average" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#outlier_dm.OutlierDetection.OutlierMethod" title="outlier_dm.OutlierDetection.OutlierMethod"><code class="xref py py-class docutils literal"><span class="pre">outlier_dm.OutlierDetection.OutlierMethod</span></code></a></p>
+<p>Simple outlier detection method using the distance to average as score.</p>
+<dl class="method">
+<dt id="outlier_dm.OutlierDetection.Outlier_Average.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_Average.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_Average.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.OutlierDetection.Outlier_Average.get_scores">
+<code class="descname">get_scores</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_Average.get_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_Average.get_scores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="outlier_dm.OutlierDetection.Outlier_LOF">
+<em class="property">class </em><code class="descclassname">outlier_dm.OutlierDetection.</code><code class="descname">Outlier_LOF</code><span class="sig-paren">(</span><em>k=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_LOF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_LOF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#outlier_dm.OutlierDetection.OutlierMethod" title="outlier_dm.OutlierDetection.OutlierMethod"><code class="xref py py-class docutils literal"><span class="pre">outlier_dm.OutlierDetection.OutlierMethod</span></code></a></p>
+<p>Outlier detection using the local outlier factor (LOF) .</p>
+<dl class="method">
+<dt id="outlier_dm.OutlierDetection.Outlier_LOF.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_LOF.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_LOF.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.OutlierDetection.Outlier_LOF.get_scores">
+<code class="descname">get_scores</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_LOF.get_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_LOF.get_scores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="outlier_dm.OutlierDetection.Outlier_LOF_R">
+<em class="property">class </em><code class="descclassname">outlier_dm.OutlierDetection.</code><code class="descname">Outlier_LOF_R</code><span class="sig-paren">(</span><em>k=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_LOF_R"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_LOF_R" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#outlier_dm.OutlierDetection.OutlierMethod" title="outlier_dm.OutlierDetection.OutlierMethod"><code class="xref py py-class docutils literal"><span class="pre">outlier_dm.OutlierDetection.OutlierMethod</span></code></a></p>
+<p>Outlier detection using the local outlier factor (LOF) using the predefined R function .</p>
+<dl class="method">
+<dt id="outlier_dm.OutlierDetection.Outlier_LOF_R.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_LOF_R.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_LOF_R.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.OutlierDetection.Outlier_LOF_R.get_scores">
+<code class="descname">get_scores</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_LOF_R.get_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_LOF_R.get_scores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="outlier_dm.OutlierDetection.Outlier_Median">
+<em class="property">class </em><code class="descclassname">outlier_dm.OutlierDetection.</code><code class="descname">Outlier_Median</code><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_Median"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_Median" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#outlier_dm.OutlierDetection.OutlierMethod" title="outlier_dm.OutlierDetection.OutlierMethod"><code class="xref py py-class docutils literal"><span class="pre">outlier_dm.OutlierDetection.OutlierMethod</span></code></a></p>
+<p>Simple outlier detection method using the distance to median as score.</p>
+<dl class="method">
+<dt id="outlier_dm.OutlierDetection.Outlier_Median.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_Median.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_Median.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.OutlierDetection.Outlier_Median.get_scores">
+<code class="descname">get_scores</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_Median.get_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_Median.get_scores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="outlier_dm.OutlierDetection.Outlier_OneClassSVM">
+<em class="property">class </em><code class="descclassname">outlier_dm.OutlierDetection.</code><code class="descname">Outlier_OneClassSVM</code><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_OneClassSVM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_OneClassSVM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#outlier_dm.OutlierDetection.OutlierMethod" title="outlier_dm.OutlierDetection.OutlierMethod"><code class="xref py py-class docutils literal"><span class="pre">outlier_dm.OutlierDetection.OutlierMethod</span></code></a></p>
+<p>Outlier detection using the predefined sklearn OneClassSVM functionalities.</p>
+<dl class="method">
+<dt id="outlier_dm.OutlierDetection.Outlier_OneClassSVM.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_OneClassSVM.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_OneClassSVM.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.OutlierDetection.Outlier_OneClassSVM.get_scores">
+<code class="descname">get_scores</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_OneClassSVM.get_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_OneClassSVM.get_scores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="outlier_dm.OutlierDetection.Outlier_StandardDev">
+<em class="property">class </em><code class="descclassname">outlier_dm.OutlierDetection.</code><code class="descname">Outlier_StandardDev</code><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_StandardDev"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_StandardDev" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#outlier_dm.OutlierDetection.OutlierMethod" title="outlier_dm.OutlierDetection.OutlierMethod"><code class="xref py py-class docutils literal"><span class="pre">outlier_dm.OutlierDetection.OutlierMethod</span></code></a></p>
+<p>Statistical outlier detection method using the standard deviation.
+Usually, items with score &gt; 2 are considered as outliers.</p>
+<dl class="method">
+<dt id="outlier_dm.OutlierDetection.Outlier_StandardDev.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_StandardDev.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_StandardDev.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="outlier_dm.OutlierDetection.Outlier_StandardDev.get_scores">
+<code class="descname">get_scores</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#Outlier_StandardDev.get_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.Outlier_StandardDev.get_scores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="outlier_dm.OutlierDetection.detect_outliers">
+<code class="descclassname">outlier_dm.OutlierDetection.</code><code class="descname">detect_outliers</code><span class="sig-paren">(</span><em>vertex</em>, <em>method=None</em>, <em>score_id=0</em>, <em>k=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#detect_outliers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.detect_outliers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="outlier_dm.OutlierDetection.normalize_scores">
+<code class="descclassname">outlier_dm.OutlierDetection.</code><code class="descname">normalize_scores</code><span class="sig-paren">(</span><em>scores</em>, <em>score_range=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection.html#normalize_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection.normalize_scores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-outlier_dm.OutlierDetection_SubpopulationLattice">
+<span id="outlier-dm-outlierdetection-subpopulationlattice-module"></span><h2>outlier_dm.OutlierDetection_SubpopulationLattice module<a class="headerlink" href="#module-outlier_dm.OutlierDetection_SubpopulationLattice" title="Permalink to this headline">¶</a></h2>
+<p>&#64;author: cengels, tdong</p>
+<dl class="function">
+<dt id="outlier_dm.OutlierDetection_SubpopulationLattice.detect_outliers_subpopulation_lattice">
+<code class="descclassname">outlier_dm.OutlierDetection_SubpopulationLattice.</code><code class="descname">detect_outliers_subpopulation_lattice</code><span class="sig-paren">(</span><em>filename</em>, <em>output='Result'</em>, <em>output_path=''</em>, <em>full_output=False</em>, <em>delimiter='</em>, <em>'</em>, <em>quotechar='|'</em>, <em>limit=25000</em>, <em>outlier_method='Outlier_LOF'</em>, <em>min_population_size=30</em>, <em>threshold=3</em>, <em>threshold_avg=3</em>, <em>num_outliers=25</em>, <em>k=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/outlier_dm/OutlierDetection_SubpopulationLattice.html#detect_outliers_subpopulation_lattice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#outlier_dm.OutlierDetection_SubpopulationLattice.detect_outliers_subpopulation_lattice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read input and create list of items.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-outlier_dm">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-outlier_dm" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">outlier_dm package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-outlier_dm.Condition">outlier_dm.Condition module</a></li>
+<li><a class="reference internal" href="#module-outlier_dm.InputOutput">outlier_dm.InputOutput module</a></li>
+<li><a class="reference internal" href="#module-outlier_dm.Items">outlier_dm.Items module</a></li>
+<li><a class="reference internal" href="#module-outlier_dm.LOF">outlier_dm.LOF module</a></li>
+<li><a class="reference internal" href="#module-outlier_dm.Lattice">outlier_dm.Lattice module</a></li>
+<li><a class="reference internal" href="#module-outlier_dm.OutlierDetection">outlier_dm.OutlierDetection module</a></li>
+<li><a class="reference internal" href="#module-outlier_dm.OutlierDetection_SubpopulationLattice">outlier_dm.OutlierDetection_SubpopulationLattice module</a></li>
+<li><a class="reference internal" href="#module-outlier_dm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to outlier_dm&#8217;s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/outlier_dm.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Tiansi, etc..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/outlier_dm.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
