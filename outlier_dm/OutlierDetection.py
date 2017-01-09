@@ -5,7 +5,7 @@
 from sklearn.svm.classes import OneClassSVM
 from abc import abstractmethod, ABCMeta
 from numpy import median, average, mean, std
-import rpy2.robjects as ro
+# import rpy2.robjects as ro
 from .LOF import LOF
 
 
@@ -69,7 +69,7 @@ class OutlierMethod(metaclass=ABCMeta):
         pass        
     
     
-       
+"""
 class Outlier_LOF_R(OutlierMethod):
     '''
     Outlier detection using the local outlier factor (LOF) using the predefined R function .
@@ -85,7 +85,8 @@ class Outlier_LOF_R(OutlierMethod):
     
     def get_scores(self, data):
         self.execute(data)
-        return self.result    
+        return self.result
+"""
     
     
 class Outlier_LOF(OutlierMethod):
