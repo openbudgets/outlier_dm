@@ -25,4 +25,4 @@ Documentation is located at docs/html/
 $ iPython
 
 In [1]: import outlier_dm
-``` 
+```

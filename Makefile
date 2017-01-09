@@ -8,4 +8,4 @@ init:
 	cd ..
 
 test:
-	nosetests tests
+	nosetests outlier_dm/tests
