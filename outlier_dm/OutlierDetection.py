@@ -23,8 +23,8 @@ def detect_outliers(vertex, method = None, score_id = 0, k=5):
     
     if method == 'Outlier_LOF':
         classifier = Outlier_LOF(k)
-    elif method == 'Outlier_LOF_R':
-        classifier = Outlier_LOF_R(k)
+    # elif method == 'Outlier_LOF_R':
+    #    classifier = Outlier_LOF_R(k)
     elif method == 'Outlier_OneClassSVM':
         classifier = Outlier_OneClassSVM()
     elif method == 'Outlier_StandardDev':

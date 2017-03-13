@@ -92,15 +92,34 @@ def write_item(item, num_scores = None):
     return row
 
 
+def get_keys_from_header(csvHeader):
+    keyLst = []
+    for pair in zip(csvHeader[0], csvHeader[1]):
+        k = '-'.join(pair)
+        k = k.strip('Features-')
+        keyLst.append(k)
+    return keyLst
+
+
+def make_record(keyLst, row):
+    dic={}
+    for k,v in zip(keyLst, row):
+        dic[k] = v
+    return dic
+
+
 def write_outlier(lattice, filename = 'outlier.csv', threshold = 3, score_type='all'):
     import csv
+    dic = []
     with open(filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         
         csv_header = header(lattice.features, write_condition = score_type == 'all')
         writer.writerow(csv_header[0])
         writer.writerow(csv_header[1])
-        
+
+        keyLst = get_keys_from_header(csv_header)
+
         for item in lattice.items:
             if score_type == 'all':
                 for score in item.scores:
@@ -108,6 +127,7 @@ def write_outlier(lattice, filename = 'outlier.csv', threshold = 3, score_type='
                         row = write_item(item)
                         row.append(score[1])
                         row.append(score[2])
+                        dic.append(make_record(keyLst, row))
                         writer.writerow(row)
 
             elif score_type == 'avg_score':
@@ -115,13 +135,15 @@ def write_outlier(lattice, filename = 'outlier.csv', threshold = 3, score_type='
                 if avg_score > threshold:
                     row = write_item(item)
                     row.append(avg_score)
+                    dic.append(make_record(keyLst, row))
                     writer.writerow(row)
     dir, filename = os.path.split(filename)
-    return filename
+    return filename, dic
 
 
 def write_top_outlier(lattice, filename = 'top_outlier.csv', num_outliers = 25, server_data_path = ''):
     import csv
+    dic = []
     if os.path.isdir(server_data_path):
         filename = os.path.join(server_data_path, filename)
 
@@ -132,8 +154,10 @@ def write_top_outlier(lattice, filename = 'top_outlier.csv', num_outliers = 25, 
         if len(csv_header) > 1:
             writer.writerow(csv_header[0])
             writer.writerow(csv_header[1])
+            keyLst = get_keys_from_header(csv_header)
         else:
             writer.writerow(csv_header[0])
+            keyLst =csv_header[0]
         
         #Calculate average scores.
         # check sorting function TD
@@ -143,9 +167,10 @@ def write_top_outlier(lattice, filename = 'top_outlier.csv', num_outliers = 25, 
         for item in avg_scores[:num_outliers]:
             row = write_item(item[1])
             row.append(item[0])
+            dic.append(make_record(keyLst, row))
             writer.writerow(row)
     dir, filename = os.path.split(filename)
-    return filename
+    return filename, dic
 
          
 def output_table(lattice, threshold = 3, score_type='all'):

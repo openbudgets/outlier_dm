@@ -55,11 +55,15 @@ def detect_outliers_subpopulation_lattice(filename,
     if full_output:
         print('full output ', output_path, output)
         write_csv(lattice, os.path.join(output_path, output + '_Scores.csv'))
-        filename = write_outlier(lattice, os.path.join(output_path, output + '_Outlier.csv'), threshold)
+        filename, dic = write_outlier(lattice, os.path.join(output_path, output + '_Outlier.csv'), threshold)
         write_outlier(lattice, os.path.join(output_path, output + '_Outlier_Avg.csv'), threshold_avg, 'avg_score')
-        return dumps({'filename': filename})
+        # return dumps({'filename': filename})
+        print(dic)
+        return dumps(dic)
     else:
         output_file = output + '_top' + num_outliers.__str__() + '.csv'
-        filename = write_top_outlier(lattice, output_file, num_outliers, server_data_path=output_path)
-        return dumps({'filename': filename})
+        filename, dic = write_top_outlier(lattice, output_file, num_outliers, server_data_path=output_path)
+        # return dumps({'filename': filename})
+        print(dic)
+        return dumps(dic)
     return 0
