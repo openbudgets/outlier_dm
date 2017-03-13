@@ -43,7 +43,6 @@ class OutlierDetectionLOF(unittest.TestCase):
                                                          output_path=os.path.join(os.path.dirname(__file__),
                                                                                   '../../data'))
         assert os.path.isfile(os.path.join(os.path.dirname(__file__), '../../data/Result_top25.csv'))
-        assert False
 
     @unittest.skip('')
     def test_outlier_detection_LOF_sparql(self):
