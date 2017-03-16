@@ -9,7 +9,7 @@ app.debug = True
 def index():
     df = pd.DataFrame.from_csv('Result_top25.csv')
     sub_df = df[['year', 'budgetPhase', 'Target', 'Score']]
-    sub_df.columns = ['x', 'c', 'y', 'size']
+    sub_df.columns = ['x', 'color', 'y', 'size']
 
     return render_template(
         'index.html',
