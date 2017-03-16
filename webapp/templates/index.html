@@ -18,7 +18,7 @@
       fill-opacity: .5;
     }
     .chart text {
-      font: 10px sans-serif;
+      font: 12px sans-serif;
     }
     .chart .title {
       font: 15px sans-serif;
@@ -38,7 +38,6 @@
   var width = 500;
   var margin = 100;
   var data = {{data | safe}};
-  console.log(data);
 
   var labelX = 'YEAR';
   var labelY = 'MONEY';
@@ -91,6 +90,7 @@
     .attr("y", -margin + 40)
     .attr("dy", ".71em")
     .style("text-anchor", "end")
+    .style("font-weight", "bold")
     .text(labelY);
 
   // x axis and label
@@ -103,7 +103,26 @@
     .attr("y", margin - 60)
     .attr("dy", ".71em")
     .style("text-anchor", "end")
+    .style("font-weight", "bold")
     .text(labelX);
+
+  colors = {};
+  data.forEach(function(d) {
+    colors[d.color] = color(d.color);
+  });
+
+  i = 0;
+  for (var key in colors) {
+    if (!colors.hasOwnProperty(key)) continue;
+    i++;
+    svg.append("text")
+      .style("fill", colors[key])
+      .style("font-weight", "bold")
+      .style("font-size", "11px")
+      .attr("x", width + 50)
+      .attr("y", -50 + 20*i)
+      .text(key);
+  }
 
   svg.selectAll("circle")
     .data(data)
@@ -124,11 +143,8 @@
       fadeOut();
     })
     .transition()
-    .delay(function (d, i) { return x(d.x) - y(d.y); })
-    .duration(500)
     .attr("cx", function (d) { return x(d.x); })
-    .attr("cy", function (d) { return y(d.y); })
-    .ease("bounce");
+    .attr("cy", function (d) { return y(d.y); });
 
   function fade(color, opacity) {
     svg.selectAll("circle")
