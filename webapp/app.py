@@ -5,7 +5,7 @@ app = Flask(__name__)
 app.debug = True
 
 
-@app.route('/')
+@app.route('/outlier-dm-webapp')
 def index():
     df = pd.DataFrame.from_csv('Result_top25.csv')
     sub_df = df[['year', 'budgetPhase', 'Target', 'Score']]
