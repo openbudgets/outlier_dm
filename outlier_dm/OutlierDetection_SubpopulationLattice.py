@@ -7,6 +7,7 @@ from .Lattice import Lattice
 from .InputOutput import write_csv, write_outlier, read_input_csv, write_top_outlier
 from _operator import attrgetter
 from json import dumps
+from preprocessing_dm import construct_input_csv
 
 
 def detect_outliers_subpopulation_lattice(filename, 
@@ -67,3 +68,26 @@ def detect_outliers_subpopulation_lattice(filename,
         print(dic)
         return dumps({"result":dic})
     return 0
+
+
+def detect_outliers_subpopulation_lattice_link(link,
+                                          output='Result',
+                                          output_path = '',
+                                          full_output=False,
+                                          delimiter=',',
+                                          quotechar='|',
+                                          limit=25000,
+                                          outlier_method='Outlier_LOF',
+                                          #LOF for local outlier factor https://de.wikipedia.org/wiki/Local_Outlier_Factor
+                                          min_population_size=30,
+                                          threshold=3,
+                                          threshold_avg=3,
+                                          num_outliers=25,
+                            # Method specific parameters:
+                                          k=5):
+    fpath = construct_input_csv(link)
+    return detect_outliers_subpopulation_lattice(fpath, output=output, output_path=output_path, full_output=full_output,
+                                                 delimiter=delimiter, quotechar=quotechar, limit=limit,
+                                                 outlier_method=outlier_method, min_population_size=min_population_size,
+                                                 threshold=threshold, threshold_avg=threshold_avg,
+                                                 num_outliers=num_outliers, k = k)

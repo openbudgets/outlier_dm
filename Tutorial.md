@@ -36,6 +36,58 @@ subpopulations. Each node corresponds to a set of satisfied constraints (a one t
 constraints than the parent nodes, as illustrated below.
 
 <p align="center">
-  <img src="docs/pic/subpop.png" width="600"/>
+  <img src="docs/pic/subpop.png" width="500"/>
 </p>
 
+
+# Quick start
+
+An open source data-mining tool has been developed following the methods described by Fleischhacker, et al. (2014),
+and downloadable at https://github.com/openbudgets/outlier_dm
+
+```
+$ git clone https://github.com/openbudgets/outlier_dm.git
+$ cd outlier_dm
+outlier_dm $ make init
+```
+
+## Run at shell
+```
+$ python3 main.py --help
+Usage: main.py [OPTIONS]
+
+  input data can be a csv file, or a link of the json file :param csv:
+  :param link: :return:
+
+Options:
+  --csv TEXT   path of the input file in csv format
+  --link TEXT  link of the input file in json format
+  --help       Show this message and exit.
+```
+
+```
+$ python3 main.py --link http://ws307.math.auth.gr/rudolf/public/api/3/cubes/aragon-2008-income__568a8/facts
+```
+
+```
+$ python3 main.py --csv data/Kilkis_neu.csv
+```
+
+## Run test
+```
+outlier_dm $ make test
+```
+
+## Generate documentation
+```
+outlier_dm $ ./make_docu
+```
+Documentation is located at docs/html/
+
+## import into iPython
+
+```
+$ iPython
+
+In [1]: import outlier_dm
+```
