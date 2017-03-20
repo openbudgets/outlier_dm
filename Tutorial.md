@@ -21,6 +21,20 @@ Fleischhacker, et al. (2014). Fleischhacker, D., Paulheim, H. Bryl, Völker, J.,
 Detecting Errors in Numerical Linked Data using Cross-Checked Outlier Detection.
 In: 13th International Semantic Web Conference, pp 357-372, Riva del Garda, Italy, October 19-23, 2014. Proceedings, Part I.
 
+### Generating possible constraints
+Constraints can be set to the class or to the property. The descriptions “children 10 years and older, adults, well-trained athletes”
+in the heart-beating rate example contains classes as constraints: “children”, “adult”, and “athlete”, properties as
+constraints: “well-trained”, property values as constraints: “10 years and older”. Based on OBEU data model,
+constraints for OBEU dataset are limited to property values, such as “year = 2009”, “budgetPhase=approved”,
+“administrativeClassification = <value>”,  “economicClassification = <value>”,  “functionalClassification = <value>”.
+Given one or more datasets, we first collect all these property-value pairs, as basic constraints.
+
+### Finding subpopulations
+Each basic constraint partitions the whole set of measures into two subsets -- either satisfying the constraint, or not.
+Adding a new constraint to a subset might split it into two. Using the generated constraints, we can generate a lattice of
+subpopulations. Each node corresponds to a set of satisfied constraints (a one to one mapping). A child node satisfies more
+constraints than the parent nodes, as illustrated below.
+
 <p align="center">
   <img src="docs/pic/subpop.png" width="600"/>
 </p>
