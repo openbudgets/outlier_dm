@@ -22,6 +22,6 @@ Detecting Errors in Numerical Linked Data using Cross-Checked Outlier Detection.
 In: 13th International Semantic Web Conference, pp 357-372, Riva del Garda, Italy, October 19-23, 2014. Proceedings, Part I.
 
 <p align="center">
-  <img src="doc/pic/subpop.png" width="600"/>
+  <img src="docs/pic/subpop.png" width="600"/>
 </p>
 
