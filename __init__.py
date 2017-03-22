@@ -1,1 +1,2 @@
 from .outlier_dm import detect_outliers_subpopulation_lattice
+from .outlier_dm import detect_outliers_subpopulation_lattice_link
