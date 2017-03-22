@@ -1,0 +1,38 @@
+.chart rect {
+  fill: steelblue;
+}
+.chart rect:hover {
+  fill: turquoise;
+}
+.chart .rectM {
+  stroke: green;
+  stroke-width: 1;
+  fill: green;
+  fill-opacity: .2;
+}
+.chart .rectM:hover {
+  fill: green;
+  fill-opacity: .5;
+}
+.chart text {
+  font: 20px sans-serif;
+}
+.chart .title {
+  font: 20px sans-serif;
+}
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+div.extra {
+  position: absolute;
+  text-align: center;
+  width: 150px;
+  height: 160px;
+  padding: 2px;
+  font: 15px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 4px;
+}
