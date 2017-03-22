@@ -1,0 +1,14 @@
+<html>
+<head>
+  <link rel="stylesheet" href="static/css/styles.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+</head>
+<body>
+  {% for file in files %}
+    <p>
+      <a href="outlier-dm-webapp/{{ file['filename'] }}">{{ file['filename'] }}</a>
+      | {{ file['status'] }}
+    </p>
+  {% endfor %}
+</body>
+</html>
