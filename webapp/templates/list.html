@@ -1,14 +1,32 @@
 <html>
 <head>
   <link rel="stylesheet" href="static/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
   <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
 </head>
 <body>
-  {% for file in files %}
-    <p>
-      <a href="outlier-dm-webapp/{{ file['filename'] }}">{{ file['filename'] }}</a>
-      | {{ file['status'] }}
-    </p>
-  {% endfor %}
+  <div class="container">
+    <div class="row">
+      <div class="col sm12 m6 l6">
+        <div class="collection">
+          {% for file in files %}
+            <a href="outlier-dm-webapp/{{ file['filename'] }}" class="collection-item">
+              <b>
+                {{ file['filename'] }}
+                {% if file['status'].lower() == 'ready' %}
+                  <span class="new badge blue" data-badge-caption="{{ file['status'] }}"></span>
+                {% endif %}
+                {% if file['status'].lower() == 'processing' %}
+                  <span class="new badge red" data-badge-caption="{{ file['status'] }}"></span>
+                {% endif %}
+              </b>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
