@@ -2,9 +2,12 @@ import glob
 import os
 
 import pandas as pd
+
 from flask import Flask, render_template, jsonify
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+CORS(app)
 app.debug = True
 
 
@@ -54,7 +57,6 @@ def api_files_list():
 @app.route('/outlier-dm-webapp/api/files/<path:filename>')
 def api_file_detail(filename):
     json_answer = prepared_data(filename)
-
     return json_answer
 
 if __name__ == '__main__':
