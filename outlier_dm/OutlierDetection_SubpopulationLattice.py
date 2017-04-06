@@ -30,7 +30,8 @@ def detect_outliers_subpopulation_lattice(filename,
     '''Read input and create list of items.'''
     print('Read CSV ...')
     data = read_input_csv(filename, delimiter, quotechar, limit)
-    
+    filename_with_ID = filename
+
     items = data[0]
     features = data[1]
     
@@ -66,7 +67,7 @@ def detect_outliers_subpopulation_lattice(filename,
         filename, dic = write_top_outlier(lattice, output_file, num_outliers, server_data_path=output_path)
         # return dumps({'filename': filename})
         print(dic)
-        return dumps({"result":dic})
+        return dumps({"result":dic, "filename":filename_with_ID})
     return 0
 
 
