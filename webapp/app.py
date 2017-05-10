@@ -3,8 +3,8 @@ import os
 
 import pandas as pd
 
-from flask import Flask, render_template, jsonify
-from flask_cors import CORS, cross_origin
+from flask import Flask, render_template, jsonify, request
+from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
@@ -46,12 +46,25 @@ def index():
         'list.html',
         files=files
     )
+#curl "http://dam-obeu.iais.fraunhofer.de/results/021bd1fc-884c-4e34-9e36-022065d32e06"
 
 
-@app.route('/outlier-dm-webapp/api/files')
+@app.route('/outlier-dm-webapp/api/files', methods=['GET', 'POST'])
 def api_files_list():
-    files = existing_files()
-    return jsonify(files)
+    if request.method == 'GET':
+        files = existing_files()
+        return jsonify(files)
+
+    elif request.method == 'POST':
+        print(request.get_json())
+        data = request.get_json()
+
+        full_filename = 'outputs/{}---{}.csv'.format(
+            data['filename'],
+            data['jobid'])
+        pending_file = open(full_filename, 'w')
+        pending_file.close()
+        return jsonify(None)
 
 
 @app.route('/outlier-dm-webapp/api/files/<path:filename>')
