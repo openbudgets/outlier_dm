@@ -1,5 +1,7 @@
-import glob
 import os
+import glob
+import requests
+import pdb
 
 import pandas as pd
 
@@ -29,6 +31,35 @@ def prepared_data(filename):
     return json_answer
 
 
+def extract_jobid(file):
+    """
+    Take a dictionary containing filename and status of the file, then extract
+    the job id from the filename string
+    :param file: Dictionary, contains *filename* and *status*
+    :return: String representing the job id of the DAM request
+    """
+    filename = file['filename']
+    jobid_position = 3 + filename.find('---')
+    file_extension_len = 4
+    return filename[jobid_position: -file_extension_len]
+
+
+def query_dam(file):
+    """
+    Send a GET HTTP request to DAM to access the results of a dataset.
+    The results will be placed inside the file.
+    :param file: dictionary containing the *filename* and *status*
+    :return: None
+    """
+    jobid = extract_jobid(file)
+    pdb.set_trace()
+    response = requests.get(
+        'http://dam-obeu.iais.fraunhofer.de/results/{}'.format(jobid))
+    print(response)
+    # TODO
+    print(response.json())
+
+
 @app.route('/outlier-dm-webapp/<path:filename>')
 def file_detail(filename):
     json_answer = prepared_data(filename)
@@ -46,13 +77,15 @@ def index():
         'list.html',
         files=files
     )
-#curl "http://dam-obeu.iais.fraunhofer.de/results/021bd1fc-884c-4e34-9e36-022065d32e06"
 
 
 @app.route('/outlier-dm-webapp/api/files', methods=['GET', 'POST'])
 def api_files_list():
     if request.method == 'GET':
         files = existing_files()
+        pending_files = filter(lambda f: f['status'] == 'Processing', files)
+        for pending_file in pending_files:
+            query_dam(pending_file)
         return jsonify(files)
 
     elif request.method == 'POST':
@@ -64,7 +97,7 @@ def api_files_list():
             data['jobid'])
         pending_file = open(full_filename, 'w')
         pending_file.close()
-        return jsonify(None)
+        return jsonify(True)
 
 
 @app.route('/outlier-dm-webapp/api/files/<path:filename>')
