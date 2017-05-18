@@ -52,12 +52,21 @@ def query_dam(file):
     :return: None
     """
     jobid = extract_jobid(file)
-    pdb.set_trace()
+    print("Querying DAM for jobid {}".format(jobid))
+
     response = requests.get(
         'http://dam-obeu.iais.fraunhofer.de/results/{}'.format(jobid))
-    print(response)
-    # TODO
-    print(response.json())
+
+    if response.status_code != 200:
+        print('Bad response code: {}'.format(response.status_code))
+        return
+
+    df = pd.DataFrame.from_records(response.json()['result'])
+    df.to_csv('outputs/{}---{}.csv'.format(file, jobid))
+
+
+def is_processing(file):
+    return file['status'] == 'Processing'
 
 
 @app.route('/outlier-dm-webapp/<path:filename>')
@@ -83,9 +92,8 @@ def index():
 def api_files_list():
     if request.method == 'GET':
         files = existing_files()
-        pending_files = filter(lambda f: f['status'] == 'Processing', files)
-        for pending_file in pending_files:
-            query_dam(pending_file)
+        pending_files = filter(is_processing, files)
+        list(map(query_dam, pending_files))
         return jsonify(files)
 
     elif request.method == 'POST':
