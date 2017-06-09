@@ -1,9 +1,6 @@
 import os
 import glob
 import requests
-import pdb
-
-import pandas as pd
 
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
@@ -24,12 +21,12 @@ def existing_files():
 
 
 def prepared_data(filename):
+    import pandas as pd
     df = pd.DataFrame.from_csv(filename)
-
 
     budgetphase_columns = list(filter(lambda col: 'budgetphase' in col.lower(),
                                       df.columns))
-    if budgetphase_columns == []:
+    if not budgetphase_columns:
         df['budgetPhase'] = ['Null' for _ in range(len(df))]
     else:
         df['budgetPhase'] = df[budgetphase_columns[0]]
@@ -37,7 +34,7 @@ def prepared_data(filename):
     columns_with_year = filter(lambda col: 'year' in col.lower(),
                                df.columns)
     year_columns = list(columns_with_year)
-    if year_columns == []:
+    if not year_columns:
         df['year'] = [1 for _ in range(len(df))]
     else:
         df['year'] = df[year_columns[0]]
@@ -67,6 +64,7 @@ def query_dam(file):
     :param file: dictionary containing the *filename* and *status*
     :return: None
     """
+    import pandas as pd
     jobid = extract_jobid(file)
     print("Querying DAM for jobid {}".format(jobid))
 
@@ -76,9 +74,13 @@ def query_dam(file):
     if response.status_code != 200:
         print('Bad response code: {}'.format(response.status_code))
         return
+    if response.json().get('result') is None:
+        return
+    if response.json().get('result').get('result') is None:
+        return
 
-    df = pd.DataFrame.from_records(response.json()['result'])
-    df.to_csv('outputs/{}---{}.csv'.format(file, jobid))
+    df = pd.DataFrame.from_records(response.json()['result']['result'])
+    df.to_csv('{}'.format(file['filename']))
 
 
 def is_processing(file):
@@ -110,6 +112,7 @@ def api_files_list():
         files = existing_files()
         pending_files = filter(is_processing, files)
         list(map(query_dam, pending_files))
+        files = existing_files()
         return jsonify(files)
 
     elif request.method == 'POST':
