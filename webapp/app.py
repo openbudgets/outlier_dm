@@ -25,6 +25,22 @@ def existing_files():
 
 def prepared_data(filename):
     df = pd.DataFrame.from_csv(filename)
+
+
+    budgetphase_columns = list(filter(lambda col: 'budgetphase' in col.lower(),
+                                      df.columns))
+    if budgetphase_columns == []:
+        df['budgetPhase'] = ['Null' for _ in range(len(df))]
+    else:
+        df['budgetPhase'] = df[budgetphase_columns[0]]
+
+    columns_with_year = filter(lambda col: 'year' in col.lower(),
+                               df.columns)
+    year_columns = list(columns_with_year)
+    if year_columns == []:
+        df['year'] = [1 for _ in range(len(df))]
+    else:
+        df['year'] = df[year_columns[0]]
     sub_df = df[['year', 'budgetPhase', 'Target', 'Score']]
     sub_df.columns = ['x', 'color', 'y', 'size']
     json_answer = sub_df.to_json(orient='records')
