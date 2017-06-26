@@ -39,8 +39,9 @@ def prepared_data(filename):
     else:
         df['year'] = df[year_columns[0]]
 
-    target_columns = list(filter(lambda col: 'target' in col.lower()))
-    df['Target'] = target_columns[0]
+    target_columns = list(filter(lambda col: 'target' in col.lower(),
+                                 df.columns))
+    df['Target'] = df[target_columns[0]]
 
     sub_df = df[['year', 'budgetPhase', 'Target', 'Score']]
     sub_df.columns = ['x', 'color', 'y', 'size']
