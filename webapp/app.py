@@ -38,6 +38,10 @@ def prepared_data(filename):
         df['year'] = [1 for _ in range(len(df))]
     else:
         df['year'] = df[year_columns[0]]
+
+    target_columns = list(filter(lambda col: 'target' in col.lower()))
+    df['Target'] = target_columns[0]
+
     sub_df = df[['year', 'budgetPhase', 'Target', 'Score']]
     sub_df.columns = ['x', 'color', 'y', 'size']
     json_answer = sub_df.to_json(orient='records')
