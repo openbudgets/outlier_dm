@@ -7,6 +7,13 @@ $ git clone https://github.com/openbudgets/outlier_dm.git
 $ cd outlier_dm
 outlier_dm $ make init
 ```
+# Webapp start
+```
+# cd webapp/
+webapp# pip3 install -r requirements.txt
+webapp# python3 app.py
+```
+vistit [http://0.0.0.0:5000/outlier-dm-webapp ](http://0.0.0.0:5000/outlier-dm-webapp )
 
 # Run test
 ```

@@ -96,8 +96,10 @@ def get_keys_from_header(csvHeader):
     keyLst = []
     for pair in zip(csvHeader[0], csvHeader[1]):
         k = '-'.join(pair)
-        k = k.strip('Feature')
-        k = k.strip('s-')
+        t = k[:9]
+        if (t == "Features-"):
+            k = k[9:]
+        k = k.strip('-')
         keyLst.append(k)
     return keyLst
 
