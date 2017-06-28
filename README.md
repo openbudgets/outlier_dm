@@ -7,6 +7,12 @@ $ git clone https://github.com/openbudgets/outlier_dm.git
 $ cd outlier_dm
 outlier_dm $ make init
 ```
+# Webapp (backend) inside Docker container
+```sh
+$ cd webapp
+$ docker-compose up
+```
+
 # Webapp start
 ```
 # cd webapp/
