@@ -11,6 +11,10 @@ app.debug = True
 
 
 def existing_files():
+    """
+    Get a list of CSV files in the "outputs" folder.
+    :return: list of strings representing file names.
+    """
     files = []
     for file in glob.glob('outputs/*.csv'):
         if os.stat(file).st_size == 0:
@@ -21,9 +25,16 @@ def existing_files():
 
 
 def prepared_data(filename):
+    """
+    Read a CSV file and process its data to find columns with different names,
+    build labels, etc.
+    :param filename: String, name of the file to be read.
+    :return: JSON string representing the data as a Pandas DataFrame.
+    """
     import pandas as pd
     df = pd.DataFrame.from_csv(filename)
 
+    # find out which columns represent budgetphase, year and target
     budgetphase_columns = list(filter(lambda col: 'budgetphase' in col.lower(),
                                       df.columns))
     if not budgetphase_columns:
@@ -43,8 +54,20 @@ def prepared_data(filename):
                                  df.columns))
     df['Target'] = df[target_columns[0]]
 
+    # rename columns
     sub_df = df[['year', 'budgetPhase', 'Target', 'Score']]
     sub_df.columns = ['x', 'color', 'y', 'size']
+
+    # add score labels as a column to make the score human readable
+    score_labels = ['Low', 'Medium', 'High']
+    step = int((max(sub_df['size']))/3.0)
+    sub_df['score_label'] = \
+        pd.cut(sub_df['size'],
+               range(0, int(max(sub_df['size'])) + step, step + 1),
+               right=False,
+               labels=score_labels)
+
+    # transform the df to a json object so that it can be send back in response
     json_answer = sub_df.to_json(orient='records')
     return json_answer
 
