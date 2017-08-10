@@ -38,7 +38,9 @@ def prepared_data(filename):
     budgetphase_columns = list(filter(lambda col: 'budgetphase' in col.lower(),
                                       df.columns))
     if not budgetphase_columns:
-        df['budgetPhase'] = ['Null' for _ in range(len(df))]
+        # we will use 'No Phase' as default because there's no much space on
+        # screen to display something like Unknown Budget Phase
+        df['budgetPhase'] = ['No Phase' for _ in range(len(df))]
     else:
         df['budgetPhase'] = df[budgetphase_columns[0]]
 
